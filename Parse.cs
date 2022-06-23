@@ -15,7 +15,7 @@ namespace C_sharp_text_parsing
         public Area[] _Parse(string fileName = "data.txt")
         {
             Console.WriteLine(Directory.GetCurrentDirectory().ToString());
-            List<Area> toReturn = new List<Area>();
+            List<string[]> toParse = new List<string[]>(); //Debug
             try
             {
                 string path = System.IO.Path.Join(Directory.GetCurrentDirectory(), fileName);
@@ -23,93 +23,88 @@ namespace C_sharp_text_parsing
                 List<string> block = new List<string>();
 
                 string[] data = text.Split("\n");
-                bool hunt = false;
+                bool searching = false;
 
                 for (int i = 0; i < data.Length; i++)
                 {
-                    if (data[i].ToLower().Contains("start"))//This annotates the beginning of a new Area
+                    Console.WriteLine(data[i]);
+
+
+                    if (data[i].ToLower().StartsWith("start"))//This annotates the beginning of a new Area
                     {
-                        hunt = true;
+                        searching = true;
                     }
-
-  
-
-                    if (!data[i].ToLower().StartsWith("end") && hunt)
+                    if (data[i].ToLower().StartsWith("end") && searching)
+                    {
+                        searching = false;
+                        Console.WriteLine("\n\nAdding area\n\n");
+                        toParse.Add(block.ToArray());
+                        block.Clear();
+                    }
+                    else if (searching)
                     {
                         block.Add(data[i]);
                     }
-                    else if (data[i].ToLower().StartsWith("end") && hunt)
-                    {
-                        hunt = false;
-
-                        string[] array = block.ToArray();
-
-
-                        Area toAdd = this.ParseArray(array);
-
-                        block.Clear();
-                        toReturn.Add(toAdd);
-
-                    }
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("There was an issue parsing data: " + e.Message);
                 Console.WriteLine(e.StackTrace);
-                toReturn = new List<Area> { new Area("...") };
-            } finally
+                toParse = null;
+            }
+            Area[] bruh = new Area[toParse.Count];
+
+
+            for (int i = 0; i < bruh.Length; i++)
             {
-                Console.WriteLine("Finished parsing the data");
+                bruh[i] = ParseArray(toParse[i]);
+                Console.WriteLine($"Parsed area {i} ({bruh[i].name})");
             }
 
-            this.Verify(toReturn.ToArray());
+            Verify(bruh);
 
             parseSettings();
 
-            return toReturn.ToArray();
+            return bruh;
         }
 
         private void parseSettings()
         {
-            string text = System.IO.File.ReadAllText(System.IO.Path.Join(Directory.GetCurrentDirectory(), "settings.txt"));
+            string text = File.ReadAllText(System.IO.Path.Join(Directory.GetCurrentDirectory(), "settings.txt"));
 
-            string[] data = text.Split("\n");
+            string[] information = text.Split("\n");
 
-            for (int i = 0; i < data.Length; i++)
+            for (int i = 0; i < information.Length; i++)
             {
-                if (data[i].ToLower().StartsWith("console:"))
-                {
-                    Console.Title = data[i].Replace("console:", "");
-                }
+                if (information[i].Length <= 0)
+                    continue;
 
-                if (data[i].ToLower().StartsWith("intro:"))
+                string[] input = information[i].Split(":");
+                string command = input[0].ToLower();
+                string data = input[1];
+                switch (command)
                 {
-                    intro = data[i].Replace("intro:", "");
-                    intro = intro.Replace("Intro:", "");
-                    intro = intro.Replace("//", "\n");
-                }
+                    case "console":
+                        Console.Title = data;
+                        break;
 
-                if (data[i].ToLower().StartsWith("final:"))
-                {
-                    lastId = data[i].Replace("final:", "");
-                }
+                    case "intro":
+                        intro = data;
+                        break;
 
-                if (data[i].ToLower().StartsWith("finalcommand:"))
-                {
-                    lastCommand = data[i].Replace("finalCommand:", "");
-                    lastCommand = lastCommand.Replace("finalcommand:", "");
-                    lastCommand = lastCommand.Replace("FinalCommand:", "");
-                    lastCommand = lastCommand.Replace("Finalcommand:", "");
-                }
+                    case "final command":
+                        lastCommand = data;
+                        break;
 
-                if (data[i].ToLower().StartsWith("finalmessage:"))
-                {
-                    lastMessage = data[i].Replace("finalMessage:", "");
-                    lastMessage = lastMessage.Replace("finalmessage:", "");
-                    lastMessage = lastMessage.Replace("FinalMessage:", "");
-                    lastMessage = lastMessage.Replace("Finalmessage:", "");
-                }
+                    case "final message":
+                        lastMessage = data;
+                        break;
 
+                    case "final area":
+                        lastId = data;
+                        break;
+                }
             }
         }
 
@@ -119,27 +114,43 @@ namespace C_sharp_text_parsing
 
             for (int i = 0; i < input.Length; i++)
             {
-                if (input[i].ToLower().Contains("name:"))
+                Console.WriteLine(input[i]);
+                string[] parameters = input[i].Split(":");
+                if (parameters.Length < 2)
+                    continue;
+                string command, data;
+
+                try
                 {
-
-                    toReturn.name = input[i].Replace("name:", "");
-
-                } else if (input[i].ToLower().Contains("id:"))
+                    command = parameters[0];
+                    data = parameters[1];
+                } catch
                 {
+                    Console.WriteLine("Bruh");
+                    return null;
+                }
 
-                    toReturn.identifier = input[i].Replace("id:", "");
-
-                } else if (input[i].ToLower().Contains("desc:"))
+                switch (command)
                 {
-                    toReturn.description = input[i].Replace("desc:", "");
+                    case "name":
+                        toReturn.name = data;
+                        break;
 
-                } else if (input[i].ToLower().Contains("areas:"))
-                {
-                    toReturn.areasToGo = input[i].Replace("areas:", "").Split(",");
+                    case "id":
+                        toReturn.identifier = data;
+                        break;
+
+                    case "description":
+                        toReturn.description = data;
+                        break;
+
+                    case "areas":
+                        toReturn.areasToGo = data.Split(",");
+                        break;
                 }
             }
 
-            toReturn.description = toReturn.description.Replace("//", "\n");
+            toReturn.description = toReturn.description.Replace("\\n", "\n");
 
 
             return toReturn;
@@ -165,31 +176,34 @@ namespace C_sharp_text_parsing
             Console.ReadKey();
         }
 
-        private void Verify(Area[] arr)
+        void Verify(Area[] areas)
         {
-            for (int i = 0; i < arr.Length; i++)
+            foreach (Area area in areas)
             {
-                for (int j = 0; j < arr.Length; j++)
+                if (area == null)
                 {
-                    if (arr[i].identifier == arr[j].identifier && arr[i] != arr[j])
+                    Console.WriteLine("An area is null... skipping");
+                    continue;
+                }
+
+                if (area.identifier == null)
+                {
+                    throw new Exception($"The area {area.name} does not have an ID");
+                }
+
+                foreach (Area area2 in areas)
+                {
+                    if (area == area2)
+                        continue;
+
+                    if (area.identifier == area2.identifier)
                     {
                         Console.Clear();
-                        Console.WriteLine("You can't assign the same id to 2 areas");
-                        while (true)
-                            Console.ReadLine();
+                        throw new Exception("You can not assign the same id to two areas");
                     }
                 }
-
-                if (arr[i].identifier == null)
-                {
-                    Console.Clear();
-                    Console.WriteLine("One of your areas doesn't have an ID!");
-                    while (true)
-                        Console.ReadLine();
-                }
-
-   //
             }
         }
+
     }
 }

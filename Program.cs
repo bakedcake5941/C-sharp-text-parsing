@@ -21,16 +21,15 @@ namespace C_sharp_text_parsing
             //parsingManager.listAreas(areas);
 
             currentArea = areas[0];
-
             parsingManager.readIntro();
-
             while (true)
             {
                 Console.Clear();
                 Console.Write("You are currently in ");
-                currentArea.getCard();
+                Console.WriteLine(currentArea);
 
                 Console.WriteLine("\nWhat do you want to do?");
+                Console.WriteLine("To look at commands type actions\n");
 
                 string e = Console.ReadLine();
 
@@ -100,14 +99,15 @@ namespace C_sharp_text_parsing
                 {
                     string[] data =
                     {
-                        "console:Game",
+                        "title:Game",
                         "intro:You find yourself in an example for my game creator",
-                        "final:final",
-                        "finalCommand:end",
-                        "finalMessage:You win!"
+                        "final area:final",
+                        "final Command:end",
+                        "final Message:You win!"
                     };
 
                     m.Write(new utilities().Join(data, "\n"));
+                    m.Close();
                 }
             }
 
@@ -126,35 +126,35 @@ namespace C_sharp_text_parsing
 
 "start",
 "name:area1",
-"desc:the first area",
+"description:the first area",
 "id:nnn",
 "areas:nnn1,nnn",
 "end",
 
 "start",
 "name:area2",
-"desc:the second area",
+"description:the second area",
 "id:nnn1",
 "areas:nnn,nnn1,nnn3",
 "end",
 
 "start",
 "name:invalid",
-"desc:the fourth secret area",
+"description:the fourth secret area",
 "id:nnn2",
 "areas:nnn,nnn1,nnn2",
 "end",
 
 "start",
 "name:area3",
-"desc:the third area",
+"description:the third area",
 "id:nnn3",
 "areas:nnn3,nnn1,nnn,final",
 "end",
 
 "start",
 "name:final area",
-"desc:the final area in the game",
+"description:the final area in the game",
 "id:final",
 "areas:final",
 "end"

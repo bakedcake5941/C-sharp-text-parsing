@@ -7,11 +7,11 @@ namespace C_sharp_text_parsing
     public class Area
     {
         public string name;
-        public string identifier;
-        public string description;
-        public string[] areasToGo;
-        private string[] areasToGoNames;
-        private bool namesDefined;
+        public string identifier = null;
+        public string description = null;
+        public string[] areasToGo = null;
+        private string[] areasToGoNames = null;
+        private bool namesDefined = false;
 
         public Area(string _name)
         {
@@ -26,7 +26,7 @@ namespace C_sharp_text_parsing
                 {
                     if (areasToGo == null)
                     {
-                        Area broken = new Area("The broken land");
+                        Area broken = new Area("Error");
                         broken.description = "There appears to have been a fatal error!";
                         broken.areasToGo = new string[]
                         {
@@ -63,9 +63,9 @@ namespace C_sharp_text_parsing
             return this;
         }
 
-        public void getCard()
+        public override string ToString()
         {
-            Console.Write(name + ",\n" + description + "\n");
+            return (name + ",\n" + description + "\n");
         }
 
         public string getAreas(Area[] areas)
