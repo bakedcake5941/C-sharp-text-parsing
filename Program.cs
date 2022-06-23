@@ -85,7 +85,7 @@ namespace C_sharp_text_parsing
             {
                 using (StreamWriter m = File.CreateText(pathA))
                 {
-                    string instructionss = "This is a simple project I am making to test out some things with parsing as well as making console games, this has a simple coding language that you should be able to understand from data.txt\nCheck the github to find actual documentation\nGithub: I haven't made it yet";
+                    string instructionss = "This is a simple project I am making to test out some things with parsing as well as making console games, this has a simple coding language that you should be able to understand from data.txt";
 
                     m.Write(instructionss);
                 }
@@ -97,16 +97,9 @@ namespace C_sharp_text_parsing
             {
                 using (StreamWriter m = File.CreateText(pathC))
                 {
-                    string[] data =
-                    {
-                        "title:Game",
-                        "intro:You find yourself in an example for my game creator",
-                        "final area:final",
-                        "final Command:end",
-                        "final Message:You win!"
-                    };
 
-                    m.Write(new utilities().Join(data, "\n"));
+
+                    m.Write(new utilities().Join(constants.Settings, "\n"));
                     m.Close();
                 }
             }
@@ -115,52 +108,9 @@ namespace C_sharp_text_parsing
             {
                 using (StreamWriter m = File.CreateText(pathB))
                 {
-                    string[] toWrite =
-                    {
-                        "console:Game",
+                    
 
-"intro:You find yourself in an example for my game creator",
-"final:final",
-"finalCommand:end",
-"finalMessage:You win!",
-
-"start",
-"name:area1",
-"description:the first area",
-"id:nnn",
-"areas:nnn1,nnn",
-"end",
-
-"start",
-"name:area2",
-"description:the second area",
-"id:nnn1",
-"areas:nnn,nnn1,nnn3",
-"end",
-
-"start",
-"name:invalid",
-"description:the fourth secret area",
-"id:nnn2",
-"areas:nnn,nnn1,nnn2",
-"end",
-
-"start",
-"name:area3",
-"description:the third area",
-"id:nnn3",
-"areas:nnn3,nnn1,nnn,final",
-"end",
-
-"start",
-"name:final area",
-"description:the final area in the game",
-"id:final",
-"areas:final",
-"end"
-                    };
-
-                    m.Write(new utilities().Join(toWrite, "\n"));
+                    m.Write(new utilities().Join(constants.ExampleCode, "\n"));
                 }
                 Console.WriteLine("Created data...");
                 return false;
