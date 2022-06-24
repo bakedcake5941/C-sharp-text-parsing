@@ -85,24 +85,29 @@ namespace C_sharp_text_parsing
                 string data = input[1];
                 switch (command)
                 {
-                    case "console":
+                    case "title":
                         Console.Title = data;
+                        constants.Settings.Title = data;
                         break;
 
                     case "intro":
                         intro = data;
+                        constants.Settings.intro = data;
                         break;
 
                     case "final command":
                         lastCommand = data;
+                        constants.Settings.lastCommand = data;
                         break;
 
                     case "final message":
                         lastMessage = data;
+                        constants.Settings.lastMessage = data;
                         break;
 
                     case "final area":
                         lastId = data;
+                        constants.Settings.lastId = data;
                         break;
                 }
             }
@@ -136,10 +141,6 @@ namespace C_sharp_text_parsing
                         toReturn.name = data;
                         break;
 
-                    case "id":
-                        toReturn.identifier = data;
-                        break;
-
                     case "description":
                         toReturn.description = data;
                         break;
@@ -165,7 +166,7 @@ namespace C_sharp_text_parsing
 
                 Console.WriteLine(m[i].name);
                 Console.WriteLine(m[i].description);
-                Console.WriteLine(new utilities().Join(m[i].areasToGo, ", "));
+                Console.WriteLine(utilities.Join(m[i].areasToGo, ", "));
             }
         }
 
@@ -186,9 +187,9 @@ namespace C_sharp_text_parsing
                     continue;
                 }
 
-                if (area.identifier == null)
+                if (area.name == null)
                 {
-                    throw new Exception($"The area {area.name} does not have an ID");
+                    throw new Exception($"The area {area.name} does not have a name");
                 }
 
                 foreach (Area area2 in areas)
@@ -196,10 +197,10 @@ namespace C_sharp_text_parsing
                     if (area == area2)
                         continue;
 
-                    if (area.identifier == area2.identifier)
+
+                    if (area.name == area2.name)
                     {
-                        Console.Clear();
-                        throw new Exception("You can not assign the same id to two areas");
+                        throw new Exception($"Two areas cannot have the same name");
                     }
                 }
             }

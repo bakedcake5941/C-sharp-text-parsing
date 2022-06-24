@@ -7,18 +7,27 @@ namespace C_sharp_text_parsing
     public class Area
     {
         public string name;
-        public string identifier = null;
         public string description = null;
         public string[] areasToGo = null;
-        private string[] areasToGoNames = null;
-        private bool namesDefined = false;
 
         public Area(string _name)
         {
             name = _name;
         }
 
-        public Area findAreas(Area[] areas, string idToFind)
+        public string ListPaths()
+        {
+            string toReturn = "";
+
+            foreach (string st in areasToGo)
+            {
+                toReturn += st + "\n";
+            }
+
+            return toReturn;
+        }
+
+        /*public Area findAreas(Area[] areas, string idToFind)
         { 
             for (int i = 0; i < areas.Length; i++)
             {
@@ -63,15 +72,11 @@ namespace C_sharp_text_parsing
             return this;
         }
 
-        public override string ToString()
-        {
-            return (name + ",\n" + description + "\n");
-        }
+
 
         public string getAreas(Area[] areas)
         {
             List<string> names = new List<string>();
-            utilities stringManager = new utilities();
 
             if (!namesDefined)
             {
@@ -94,7 +99,12 @@ namespace C_sharp_text_parsing
             } 
 
 
-            return stringManager.Join(areasToGoNames, "\n");
+            return utilities.Join(areasToGoNames, "\n");
+        }*/
+
+        public override string ToString()
+        {
+            return (name + ",\n" + description + "\n");
         }
     }
 }
