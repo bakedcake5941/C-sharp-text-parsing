@@ -18,40 +18,35 @@ namespace C_sharp_text_parsing
 "start",
 "name:area1",
 "description:the first area",
-"id:nnn",
-"areas:nnn1,nnn",
+"areas:area2",
 "end",
 
 "start",
 "name:area2",
 "description:the second area",
-"id:nnn1",
-"areas:nnn,nnn1,nnn3",
+"areas:area1,area3",
 "end",
 
 "start",
 "name:invalid",
 "description:the fourth secret area",
-"id:nnn2",
 "areas:nnn,nnn1,nnn2",
 "end",
 
 "start",
 "name:area3",
 "description:the third area",
-"id:nnn3",
-"areas:nnn3,nnn1,nnn,final",
+"areas:area1,area2,final area",
 "end",
 
 "start",
 "name:final area",
 "description:the final area in the game",
-"id:final",
-"areas:final",
+"areas:final area",
 "end"
                     };
 
-        public static readonly string[] Settings =
+        public static readonly string[] SettingsDefault =
                     {
                         "title:Game",
                         "intro:You find yourself in an example for my game creator",
@@ -59,5 +54,36 @@ namespace C_sharp_text_parsing
                         "final Command:end",
                         "final Message:You win!"
                     };
+
+        public const string instructions = "Right now all you can do is look at data.txt as an example";
+    
+        public static class Settings
+        {
+            public static string intro;
+            public static string lastId;
+            public static string lastCommand;
+            public static string lastMessage;
+            public static string Title;
+
+            public static string[] ToStrings()
+            {
+                return new string[]
+                {
+                    intro, lastId, lastCommand, lastMessage, Title
+                };
+            }
+
+            public static void SetValues(string[] input)
+            {
+                if (input.Length != 5)
+                    return;
+
+                intro = input[0];
+                lastId = input[1];
+                lastCommand = input[2];
+                lastMessage = input[3];
+                Title = input[4];
+            }
+        }
     }
 }
